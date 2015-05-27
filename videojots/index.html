@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>VideoJots</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/index.js"></script>
+</head>
+<body>
+<div role="tabpanel" style="width: 97%;">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#editor" aria-controls="editor" role="tab" data-toggle="tab">Editor</a></li>
+        <li role="presentation"><a href="#viewoutput" aria-controls="viewoutput" role="tab" data-toggle="tab">View Output</a></li>
+        <li role="presentation"><a href="#copyoutput" aria-controls="copyoutput" role="tab" data-toggle="tab">Copy Output</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="editor">
+            <div class="row">
+                
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="tbURL" onkeypress=" return loadVideo(event) ">
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-primary" onclick=" loadVideoURL() ">Play</button>
+                </div>
+            </div>
+
+            <div class="row">
+                
+                <div class="col-md-8">
+                    <div style="width: 97%;" id="player"></div>
+                    <div style="width: 97%;" class="form-group">
+                        <div id="tagArray">&nbsp;</div>
+                        <label for="comment">Notes:</label>
+                        <input type="text" class="form-control" id="tbNotes" onkeypress=" return keyPressEvent(event) " onkeyup=" return keyUpEvent(event) ">
+                        <span id="spnAlert" class="label label-danger"></span><br />
+                        <span id="spnNextJot" class="label label-warning"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div style="height: 350px; width: 95%" class="panel panel-default">
+                        <div class="panel-heading">Source</div>
+                        <div role="tabpanel">
+
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#source" aria-controls="source" role="tab" data-toggle="tab">Source</a></li>
+                                <li role="presentation"><a href="#raw" aria-controls="raw" role="tab" data-toggle="tab">Raw</a></li>
+                                <li role="presentation"><a href="#slashcode" aria-controls="slashcode" role="tab" data-toggle="tab">SlashCode</a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="source">
+
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="raw">
+                                    <textarea id="txtSource" style="width: 90%;height: 90%"></textarea>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="slashcode">
+                                    Formatting rules:<br />
+                                    /p/-pause<br />
+                                    /r/-resume<br />
+                                    /-5/-rewind 5 seconds<br />
+                                    /10/-forward 10 seconds<br />
+                                    /tag/-open new tag element<br />
+                                    //-close currently open tag<br />
+                                    /name/text/-creates a new element with value name and content text. Equivalent to &lt;name&gt;text&lt;/name&gt;<br />
+                                    /now/-creates a time placeholder which will be used for the next note
+                                    <textarea id="txtCSS" style="width: 95%;"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="height: 300px; width: 95%" class="panel panel-default">
+                        <div class="panel-heading">Output</div>
+                        <div class="panel-body" id="pnlNotes">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="viewoutput">
+            
+        </div>
+        <div role="tabpanel" class="tab-pane" id="copyoutput">
+            <style scoped>
+                textarea {
+     width: 100%;
+     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+     box-sizing: border-box;         /* Opera/IE 8+ */
+                    height: auto;
+}
+            </style>
+            <textarea rows="50" id="txtOutputHTML"></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+
+
+<script>
+    // 2. This code loads the IFrame Player API code asynchronously.
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // 3. This function creates an <iframe> (and YouTube player)
+    //    after the API code downloads.
+    var player;
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '570',
+            width: '1000',
+            videoId: 'nfoudtpBV68',
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    // 4. The API will call this function when the video player is ready.
+    function onPlayerReady(event) {
+        event.target.playVideo();
+    }
+
+    // 5. The API calls this function when the player's state changes.
+    //    The function indicates that when playing a video (state=1),
+    //    the player should play for six seconds and then stop.
+    var done = false;
+
+    function onPlayerStateChange(event) {
+        //if (event.data == YT.PlayerState.PLAYING && !done) {
+        //    setTimeout(stopVideo, 6000);
+        //    done = true;
+        //}
+    }
+
+    function stopVideo() {
+        player.stopVideo();
+    }
+</script>
+</body>
+</html>
