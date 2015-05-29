@@ -21,25 +21,10 @@ var COMMAND= {
 $(function () {
     window.tagArray = [];
     window.textSource = '';
-    $(".resizable")
-      .wrap('<div/>')
-        .css({ 'overflow': 'hidden' })
-          .parent()
-            .css({
-                'display': 'inline-block',
-                'overflow': 'hidden',
-                'height': function () { return $('.resizable', this).height(); },
-                'width': function () { return $('.resizable', this).width(); },
-                'paddingBottom': '12px',
-                'paddingRight': '12px'
-
-            }).resizable()
-                    .find('.resizable')
-                      .css({
-                          overflow: 'auto',
-                          width: '100%',
-                          height: '100%'
-                      });
+    $('#txtSource').bind('input propertychange', function () {
+        window.textSource = $("#txtSource").val();
+        updateOutput();
+    });
 });
 
 //Source: http://stackoverflow.com/questions/1219860/html-encoding-in-javascript-jquery
@@ -103,6 +88,7 @@ function convertSourceToOutput(sourceText, includeVideo) {
     var clickableStyle = '.clickable{cursor:pointer;cursor:hand;}.clickable:hover{background:yellow;}';
     var style = clickableStyle+ $("#txtCSS").val();
     var endScopedStyle = '</style>';
+    var footer = '<br/><span style="font-size:xx-small;">Video outline created using <a target="_blank" href="http://thesoonerdev.github.io/videojots/">VideoJots</a><span><br/>';
     var htmlPost = '</span>';
     var htmlFromSource = '';
     $.each(lines, function (index, value) {
@@ -129,7 +115,7 @@ function convertSourceToOutput(sourceText, includeVideo) {
             htmlFromSource += '<span class="clickable" onclick="playVideoAt('+location+')">'+ htmlRaw+'</span>';
         }
     });
-    htmlFromSource = '<div style="height:300px;overflow:auto" class="resizable">' + htmlFromSource + '</div>';
+    htmlFromSource = '<div style="height:300px;overflow:auto" class="resizable">' + htmlFromSource + footer+'</div>';
     html = htmlPre + playerHTML+ startScopedStyle + style + endScopedStyle + htmlFromSource + htmlPost;
     return html;
 }
@@ -209,7 +195,7 @@ function getCommand(text) {
 
 function addToSource(text, position) {
     window.textSource += '{|'+position+'|' + text + '|}';
-    $("#txtSource").text(window.textSource);
+    $("#txtSource").val(window.textSource);
 }
 
 function keyPressEvent(e) {
@@ -279,17 +265,21 @@ function keyPressEvent(e) {
         }
         if (!doNotDisplay && textToDisplay.trim() !== '') {
             addToSource(htmlEncode(sourceText), window.currPosition);
-            var output = convertSourceToOutput($("#txtSource").text(), false);
-            var outputWithPlayer = convertSourceToOutput($("#txtSource").text(), true);
-            $("#pnlNotes").html(output);
-            $("#viewoutput").html(output);
-            $("#txtOutputHTML").text(outputWithPlayer);
+            updateOutput();
         }
         tb.value = '';
         isClear = true;
         $("#spnNextJot").text('');
         return false;
     }
+}
+
+function updateOutput() {
+    var output = convertSourceToOutput($("#txtSource").val(), false);
+    var outputWithPlayer = convertSourceToOutput($("#txtSource").val(), true);
+    $("#pnlNotes").html(output);
+    $("#viewoutput").html(output);
+    $("#txtOutputHTML").text(outputWithPlayer);
 }
 
 // Array Remove - By John Resig (MIT Licensed)
