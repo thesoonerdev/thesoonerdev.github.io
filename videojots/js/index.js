@@ -72,7 +72,7 @@ function clearPage() {
     isClear = true;
 }
 
-function convertSourceToOutput(sourceText, includeVideo) {
+function convertSourceToOutput(sourceText, includeVideo, divHeight) {
     var playerHTML = '';
     if (includeVideo) {
         var videoID = getVideoIDFromURL(player.getVideoUrl());
@@ -115,7 +115,11 @@ function convertSourceToOutput(sourceText, includeVideo) {
             htmlFromSource += '<span class="clickable" onclick="playVideoAt('+location+')">'+ htmlRaw+'</span>';
         }
     });
-    htmlFromSource = '<div style="height:300px;overflow:auto" class="resizable">' + htmlFromSource + footer+'</div>';
+    var styleAttr = '';
+    if (divHeight > 0) {
+        styleAttr = 'style="height:' + divHeight + ';overflow-y:auto"';
+    }
+    htmlFromSource = '<div '+styleAttr+' class="resizable">' + htmlFromSource + footer+'</div>';
     html = htmlPre + playerHTML+ startScopedStyle + style + endScopedStyle + htmlFromSource + htmlPost;
     return html;
 }
@@ -275,11 +279,12 @@ function keyPressEvent(e) {
 }
 
 function updateOutput() {
-    var output = convertSourceToOutput($("#txtSource").val(), false);
-    var outputWithPlayer = convertSourceToOutput($("#txtSource").val(), true);
+    var output = convertSourceToOutput($("#txtSource").val(), false,0);
+    var outputWithPlayer = convertSourceToOutput($("#txtSource").val(), true,300);
     $("#pnlNotes").html(output);
     $("#viewoutput").html(output);
     $("#txtOutputHTML").text(outputWithPlayer);
+    $("#pnlNotes").scrollTop($("#pnlNotes")[0].scrollHeight);
 }
 
 // Array Remove - By John Resig (MIT Licensed)
