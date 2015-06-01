@@ -36,7 +36,8 @@
                         <label for="comment">Notes:</label>
                         <input type="text" class="form-control" id="tbNotes" onkeypress=" return keyPressEvent(event) " onkeyup=" return keyUpEvent(event) ">
                         <span id="spnAlert" class="label label-danger"></span><br />
-                        <span id="spnNextJot" class="label label-warning"></span>
+                        <span id="spnNextJot" class="label label-warning"></span><br/>
+                        <span id="spnCurrentJot"></span>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -59,8 +60,13 @@
                                 <div role="tabpanel" class="tab-pane" id="raw">
                                     <textarea id="txtSource" style="width: 90%;height: 90%"></textarea>
                                 </div>
-                                <div role="tabpanel" class="tab-pane" id="slashcode">
-                                    Formatting rules:<br />
+                                <div role="tabpanel" class="tab-pane" id="slashcode" style="height: 250px; overflow-y: auto;">
+                                    Styles:
+                                    <textarea id="txtCSS" style="width: 95%;"></textarea><br/>
+                                    Replace:
+                                    <textarea id="txtReplace" style="width: 95%;"></textarea><br/>
+                                    <span id="spnReplacements"></span>
+                                    <br/>Formatting rules:<br />
                                     /p/-pause<br />
                                     /r/-resume<br />
                                     /-5/-rewind 5 seconds<br />
@@ -68,8 +74,7 @@
                                     /tag/-open new tag element<br />
                                     //-close currently open tag<br />
                                     /name/text/-creates a new element with value name and content text. Equivalent to &lt;name&gt;text&lt;/name&gt;<br />
-                                    /now/-creates a time placeholder which will be used for the next note
-                                    <textarea id="txtCSS" style="width: 95%;"></textarea>
+                                    /now/-creates a time placeholder which will be used for the next note<br />
                                 </div>
                             </div>
                         </div>
