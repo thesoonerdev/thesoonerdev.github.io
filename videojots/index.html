@@ -93,14 +93,17 @@
         <div role="tabpanel" class="tab-pane" id="copyoutput">
             <style scoped>
                 textarea {
-     width: 100%;
-     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-     box-sizing: border-box;         /* Opera/IE 8+ */
+                    width: 100%;
+                    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+                    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+                    box-sizing: border-box; /* Opera/IE 8+ */
                     height: auto;
-}
+                }
             </style>
-            <textarea rows="50" id="txtOutputHTML"></textarea>
+            <br/>
+            <button class="btn btn-primary" onclick=" previewHtml() ">Preview</button>
+            <br/><br/>
+            <textarea rows="40" id="txtOutputHTML"></textarea>
         </div>
     </div>
 </div>

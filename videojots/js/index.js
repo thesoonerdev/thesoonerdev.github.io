@@ -145,7 +145,7 @@ function convertSourceToOutput(sourceText, includeVideo, divHeight) {
     if (divHeight > 0) {
         styleAttr = 'style="height:' + divHeight + ';overflow-y:auto"';
     }
-    htmlFromSource = '<div '+styleAttr+' class="resizable">' + htmlFromSource + footer+'</div>';
+    htmlFromSource = '<div '+styleAttr+' class="resizable"><br/>' + htmlFromSource + footer+'</div>';
     html = htmlPre + playerHTML+ startScopedStyle + style + endScopedStyle + htmlFromSource + htmlPost;
     return html;
 }
@@ -361,6 +361,11 @@ function TryParseInt(str, defaultValue) {
         }
     }
     return retValue;
+}
+
+function previewHtml() {
+    var newWindow = window.open();
+    newWindow.document.write($("#txtOutputHTML").val());
 }
 
 $(function () {
