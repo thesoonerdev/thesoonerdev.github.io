@@ -46,16 +46,34 @@ $(function () {
 });
 
 function updateSentence(pos, newValue) {
-    var sourceText = $("#txtSource").val();
+    var sourceText = window.textSource;//$("#txtSource").val();
     //var re = new RegExp("\/" + classActualName + "\/([^\/]*)\/", "g");
     //lineText = lineText.replace(re, '<span class="' + classActualName + '">$1</span>');
     var textToSearch = '{|' + pos + '|';
     var indexOfItem = sourceText.indexOf(textToSearch);
     var indexOfMiddlePipe = sourceText.indexOf('|', indexOfItem+2);
     var indexOfEnd = sourceText.indexOf('|}', indexOfMiddlePipe+1);
-    var newString = sourceText.substr(0, indexOfMiddlePipe+1) + newValue + sourceText.substr(indexOfEnd);
-    $("#txtSource").val(newString);
+    var newString = sourceText.substr(0, indexOfMiddlePipe + 1) + newValue + sourceText.substr(indexOfEnd);
+    window.textSource = newString;
+    $("#txtSource").val(window.textSource);
     updateOutput();
+}
+
+function deleteSentence(pos) {
+    if (confirm('Confirm delete?')) {
+        var sourceText = window.textSource;
+        //var re = new RegExp("\/" + classActualName + "\/([^\/]*)\/", "g");
+        //lineText = lineText.replace(re, '<span class="' + classActualName + '">$1</span>');
+        var textToSearch = '{|' + pos + '|';
+        var indexOfItem = sourceText.indexOf(textToSearch);
+        var indexOfMiddlePipe = sourceText.indexOf('|', indexOfItem + 2);
+        var indexOfEnd = sourceText.indexOf('|}', indexOfMiddlePipe + 1);
+        var newString = sourceText.substr(0, indexOfItem) + sourceText.substr(indexOfEnd);
+        window.textSource = newString;
+        $("#txtSource").val(window.textSource);
+        updateOutput();
+        renderSource();
+    }
 }
 
 //Source: http://stackoverflow.com/questions/1219860/html-encoding-in-javascript-jquery
@@ -368,10 +386,42 @@ function updateOutput() {
 }
 
 function renderSource() {
+    renderSourceData();
+    $(".btn").click(function () {
+        if (this.id.startsWith('btnEditText_')) {
+            var id = this.id;
+            var pos = id.split('_')[1];
+            if (this.textContent === 'Edit') {
+                var taId = '#txt_' + pos.toString();
+                $(taId).prop('readonly', false);
+                this.textContent = 'Save';
+                player.seekTo(parseFloat(pos) / 1000);
+                player.pauseVideo();
+            }
+            else if (this.textContent === 'Save') {
+                var taId = '#txt_' + pos.toString();
+                var newValue = $(taId).val();
+                updateSentence(pos, newValue);
+                this.textContent = 'Edit';
+            }
+        }
+        if (this.id.startsWith('btnDeleteText_')) {
+            var id = this.id;
+            var pos = id.split('_')[1];
+            deleteSentence(pos);
+        }
+    });
+}
+
+function renderSourceData() {
+    $("#source").html('');
     var sourceText = $("#txtSource").val();
     var allText = sourceText;
     var lines = allText.split("{|");
-    var table =  $('<table/>', {});
+    var table = $('<table/>', {});
+    $(table).css('width', '100%');
+    var tbody = $('<tbody/>', {});
+    table.append(tbody);
     $.each(lines, function (index, value) {
         if (value !== '') {
             var items = value.split('|');
@@ -384,38 +434,41 @@ function renderSource() {
             $(textArea).text(text);
             $(textArea).prop('readonly', true);
             var tdTextArea = $('<td/>', {});
+            $(tdTextArea).css("width", '80%');
             tdTextArea.append(textArea);
-            var button = $('<button/>', {
+
+            var editButton = $('<button/>', {
                 id: "btnEditText_" + pos.toString(),
                 text: 'Edit'
             });
-            $(button).addClass('btn');
-            $(button).addClass('btn-primary');
-            $(button).addClass('editable');
-            var tdButton = $('<td/>', {});
-            tdButton.append(button);
-            tr.append(tdTextArea).append(tdButton);
-            table.append(tr);
+            $(editButton).addClass('btn');
+            $(editButton).addClass('btn-primary');
+            $(editButton).addClass('btn-xs');
+            $(editButton).addClass('editable');
+            var tdEditButton = $('<td/>', {});
+            tdEditButton.append(editButton);
+            $(tdEditButton).css('width', '20%');
+            $(tdEditButton).css('text-align', 'center');
+
+            var deleteButton = $('<button/>', {
+                id: "btnDeleteText_" + pos.toString(),
+                text: 'Delete'
+            });
+            $(deleteButton).addClass('btn');
+            $(deleteButton).addClass('btn-primary');
+            $(deleteButton).addClass('btn-xs');
+            $(deleteButton).addClass('deletable');
+            var tdDeleteButton = $('<td/>', {});
+            tdDeleteButton.append(deleteButton);
+            $(tdDeleteButton).css('width', '20%');
+            $(tdDeleteButton).css('text-align', 'center');
+
+            tr.append(tdTextArea).append(tdEditButton).append(tdDeleteButton);
+
+            tbody.append(tr);
         }
     });
     $("#source").html(table.html());
-    $(".btn").click(function () {
-        if (this.id.startsWith('btnEditText_')) {
-            var id = this.id;
-            var pos = id.split('_')[1];
-            if (this.textContent === 'Edit') {
-                var taId = '#txt_' + pos.toString();
-                $(taId).prop('readonly', false);
-                this.textContent = 'Save';
-            }
-            else if (this.textContent === 'Save') {
-                var taId = '#txt_' + pos.toString();
-                var newValue = $(taId).val();
-                updateSentence(pos, newValue);
-                this.textContent = 'Edit';
-            }
-        }
-    });
 }
 
 // Array Remove - By John Resig (MIT Licensed)
