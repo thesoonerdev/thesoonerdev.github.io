@@ -3,9 +3,21 @@
 <head>
     <title>VideoJots</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.css"/>
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/index.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <style>
+        #segrip {
+    width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    bottom: -5px;
+    right:-5px;
+}
+    </style>
 </head>
 <body>
 <div role="tabpanel" style="width: 97%;">
@@ -14,13 +26,12 @@
         <li role="presentation"><a href="#viewoutput" aria-controls="viewoutput" role="tab" data-toggle="tab">View Output</a></li>
         <li role="presentation"><a href="#copyoutput" aria-controls="copyoutput" role="tab" data-toggle="tab">Copy Output</a></li>
     </ul>
-
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="editor">
             <div class="row">
-                
+                <br/>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" id="tbURL" onkeypress=" return loadVideo(event) ">
+                    <input type="text" placeholder="Enter YouTube video URL here and hit Enter or click the Play button" class="form-control" id="tbURL" onkeypress=" return loadVideo(event) ">
                 </div>
                 <div class="col-md-4">
                     <button type="button" class="btn btn-primary" onclick=" loadVideoURL() ">Play</button>
@@ -28,14 +39,18 @@
             </div>
 
             <div class="row">
-                
+
                 <div class="col-md-8">
-                    <div style="width: 97%;" id="player"></div>
+                    <br/>
+                    <div id="playerBox" style="width: 800px; height: 600px;">
+                        <div class="ui-resizable-handle ui-resizable-se" id="segrip"></div>
+                        <div id="player"></div>
+                    </div>
                     <div style="width: 97%;" class="form-group">
                         <div id="tagArray">&nbsp;</div>
                         <label for="comment">Notes:</label>
                         <input type="text" class="form-control" id="tbNotes" onkeypress=" return keyPressEvent(event) " onkeyup=" return keyUpEvent(event) ">
-                        <span id="spnAlert" class="label label-danger"></span><br />
+                        <span id="spnAlert" class="label label-danger"></span><br/>
                         <span id="spnNextJot" class="label label-warning"></span><br/>
                         <span id="spnCurrentJot"></span>
                     </div>
@@ -63,9 +78,7 @@
                                 <div role="tabpanel" class="tab-pane" id="slashcode" style="height: 250px; overflow-y: auto;">
                                     Styles:
                                     <textarea id="txtCSS" style="width: 95%;"></textarea><br/>
-                                    Replace:
-                                    <textarea id="txtReplace" style="width: 95%;"></textarea><br/>
-                                    <span id="spnReplacements"></span>
+                                    
                                     <br/>Formatting rules:<br />
                                     /p/-pause<br />
                                     /r/-resume<br />
@@ -125,8 +138,8 @@
 
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
-            height: '570',
-            width: '1000',
+            height: '600',
+            width: '800',
             videoId: 'nfoudtpBV68',
             events: {
                 'onReady': onPlayerReady,
