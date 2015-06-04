@@ -42,10 +42,10 @@ $(function () {
         $("#player").height($("#playerBox").height());
         $("#player").width($("#playerBox").width());
     });
-    
+    $("#slider").slider();
 });
 
-function updateSentence(pos, newValue) {
+function updateSentence(pos, newValue, newPos) {
     var sourceText = window.textSource;//$("#txtSource").val();
     //var re = new RegExp("\/" + classActualName + "\/([^\/]*)\/", "g");
     //lineText = lineText.replace(re, '<span class="' + classActualName + '">$1</span>');
@@ -54,7 +54,13 @@ function updateSentence(pos, newValue) {
     var indexOfMiddlePipe = sourceText.indexOf('|', indexOfItem+2);
     var indexOfEnd = sourceText.indexOf('|}', indexOfMiddlePipe+1);
     var newString = sourceText.substr(0, indexOfMiddlePipe + 1) + newValue + sourceText.substr(indexOfEnd);
-    window.textSource = newString;
+    var newPosString = newString;
+    if (newPos !== pos) {
+        indexOfItem = newString.indexOf(textToSearch);
+        indexOfMiddlePipe = newString.indexOf('|', indexOfItem + 2);
+        newPosString = newString.substr(0, indexOfItem+2) + newPos + newString.substr(indexOfMiddlePipe);
+    }
+    window.textSource = newPosString;
     $("#txtSource").val(window.textSource);
     updateOutput();
 }
@@ -62,8 +68,6 @@ function updateSentence(pos, newValue) {
 function deleteSentence(pos) {
     if (confirm('Confirm delete?')) {
         var sourceText = window.textSource;
-        //var re = new RegExp("\/" + classActualName + "\/([^\/]*)\/", "g");
-        //lineText = lineText.replace(re, '<span class="' + classActualName + '">$1</span>');
         var textToSearch = '{|' + pos + '|';
         var indexOfItem = sourceText.indexOf(textToSearch);
         var indexOfMiddlePipe = sourceText.indexOf('|', indexOfItem + 2);
@@ -395,14 +399,32 @@ function renderSource() {
                 var taId = '#txt_' + pos.toString();
                 $(taId).prop('readonly', false);
                 this.textContent = 'Save';
-                player.seekTo(parseFloat(pos) / 1000);
+                var curPos = parseFloat(pos) / 1000;
+                player.seekTo(curPos);
                 player.pauseVideo();
+                $("#slider").show();
+                $("#slider").slider({
+                    value: curPos,
+                    min: curPos - 5,
+                    max: curPos + 5,
+                    step:0.1,
+                    slide: function (event, ui) {
+                        $('#txtEditPos_' + pos).val(ui.value);
+                        player.seekTo(ui.value);
+                    }
+                });
+                $("#sliderMessage").show();
+                $("#sliderSpace").show();
             }
             else if (this.textContent === 'Save') {
                 var taId = '#txt_' + pos.toString();
                 var newValue = $(taId).val();
-                updateSentence(pos, newValue);
+                var newPos = $('#txtEditPos_' + pos).val() * 1000;
+                updateSentence(pos, newValue,newPos);
                 this.textContent = 'Edit';
+                $("#slider").hide();
+                $("#sliderMessage").hide();
+                $("#sliderSpace").hide();
             }
         }
         if (this.id.startsWith('btnDeleteText_')) {
@@ -428,13 +450,22 @@ function renderSourceData() {
             var pos = parseFloat(items[0]);
             var text = items[1].split('|}')[0];
             var tr = $('<tr/>', {});
-            var textArea = $('<textarea>', {
+            var textAreaPos = $('<textarea/>', {
+                id:'txtEditPos_'+pos.toString()
+            });
+            $(textAreaPos).prop('readonly', true);
+            $(textAreaPos).text(pos/1000);
+            var tdTextAreaPos = $('<td/>', {});
+            $(tdTextAreaPos).css('width', '10%');
+            $(tdTextAreaPos).append(textAreaPos);
+
+            var textArea = $('<textarea/>', {
                 id: "txt_" + pos.toString()
             });
             $(textArea).text(text);
             $(textArea).prop('readonly', true);
             var tdTextArea = $('<td/>', {});
-            $(tdTextArea).css("width", '80%');
+            $(tdTextArea).css("width", '70%');
             tdTextArea.append(textArea);
 
             var editButton = $('<button/>', {
@@ -447,7 +478,7 @@ function renderSourceData() {
             $(editButton).addClass('editable');
             var tdEditButton = $('<td/>', {});
             tdEditButton.append(editButton);
-            $(tdEditButton).css('width', '20%');
+            $(tdEditButton).css('width', '10%');
             $(tdEditButton).css('text-align', 'center');
 
             var deleteButton = $('<button/>', {
@@ -460,11 +491,10 @@ function renderSourceData() {
             $(deleteButton).addClass('deletable');
             var tdDeleteButton = $('<td/>', {});
             tdDeleteButton.append(deleteButton);
-            $(tdDeleteButton).css('width', '20%');
+            $(tdDeleteButton).css('width', '10%');
             $(tdDeleteButton).css('text-align', 'center');
 
-            tr.append(tdTextArea).append(tdEditButton).append(tdDeleteButton);
-
+            tr.append(tdTextAreaPos).append(tdTextArea).append(tdEditButton).append(tdDeleteButton);
             tbody.append(tr);
         }
     });
