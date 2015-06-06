@@ -393,7 +393,8 @@ function updateOutput() {
 
 function saveFile() {
     window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
-    var blob = new Blob($("#txtSource").val(), { type: "text/plain;charset=utf-8" });
+    var textToWrite = $("#txtSource").val();
+    var blob = new Blob([textToWrite], { type: "text/plain;charset=utf-8" });
     saveAs(blob, currVideoID+".txt");
 }
 
