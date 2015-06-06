@@ -43,6 +43,8 @@ $(function () {
         $("#player").width($("#playerBox").width());
     });
     $("#slider").slider();
+    window.currVideoID = 'unknown';
+    $("#saveLink").attr("href", "data:text/plain;charset=utf-8," + $("#txtSource").val()).attr("download", window.currVideoID + ".txt");
 });
 
 function updateSentence(pos, newValue, newPos) {
@@ -387,6 +389,8 @@ function updateOutput() {
     $("#txtOutputHTML").text(outputWithPlayer);
     $("#pnlNotes").scrollTop($("#pnlNotes")[0].scrollHeight);
     renderSource();
+    window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
+    $("#saveLink").attr("href", "data:text/plain;charset=utf-8," + $("#txtSource").val()).attr("download", window.currVideoID + ".txt");
 }
 
 function renderSource() {
