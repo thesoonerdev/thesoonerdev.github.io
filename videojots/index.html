@@ -8,6 +8,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/index.js"></script>
     <script src="js/jquery-ui.js"></script>
+    <script src="js/FileSaver.min.js"></script>
     <style>
         #segrip {
     width: 10px;
@@ -76,7 +77,8 @@
 
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="raw">
-                                    <textarea id="txtSource" style="width: 90%;height: 90%"></textarea>
+                                    <textarea id="txtSource" style="width: 90%; height: 90%"></textarea>
+                                    <button onclick="saveFile()" id="saveLink" class="btn btn-primary">Save to local file</button>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="slashcode" style="height: 250px; overflow-y: auto;">
                                     Styles:
@@ -118,8 +120,6 @@
             </style>
             <br/>
             <button class="btn btn-primary" onclick=" previewHtml() ">Preview</button>
-            &nbsp;&nbsp;
-            <a id="saveLink" class="btn btn-primary">Save to local file</a>
             <br/><br/>
             <textarea rows="40" id="txtOutputHTML"></textarea>
         </div>

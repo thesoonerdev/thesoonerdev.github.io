@@ -389,8 +389,12 @@ function updateOutput() {
     $("#txtOutputHTML").text(outputWithPlayer);
     $("#pnlNotes").scrollTop($("#pnlNotes")[0].scrollHeight);
     renderSource();
+}
+
+function saveFile() {
     window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
-    $("#saveLink").attr("href", "data:text/plain;charset=utf-8," + $("#txtSource").val()).attr("download", window.currVideoID + ".txt");
+    var blob = new Blob($("#txtSource").val(), { type: "text/plain;charset=utf-8" });
+    saveAs(blob, currVideoID+".txt");
 }
 
 function renderSource() {
