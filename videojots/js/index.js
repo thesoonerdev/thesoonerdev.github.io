@@ -414,9 +414,12 @@ function keyPressEvent(e) {
 
 function updateOutput() {
     var output = convertSourceToOutput($("#txtSource").val(), false,0);
-    var outputWithPlayer = convertSourceToOutput($("#txtSource").val(), true,300);
+    var outputWithPlayer = convertSourceToOutput($("#txtSource").val(), true, 300);
+    $("#pnlNotes").html('');
     $("#pnlNotes").html(output);
+    $("#viewoutput").html('');
     $("#viewoutput").html(output);
+    $("#txtOutputHTML").text('');
     $("#txtOutputHTML").text(outputWithPlayer);
     $("#pnlNotes").scrollTop($("#pnlNotes")[0].scrollHeight);
     renderSource();
