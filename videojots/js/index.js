@@ -323,6 +323,7 @@ function addToSource(text, position) {
     });
     window.textSource = sortedText;
     $("#txtSource").val(window.textSource);
+    updateOutput();
 }
 
 function updateCurrentJot(text) {
