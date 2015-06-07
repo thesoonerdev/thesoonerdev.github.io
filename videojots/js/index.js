@@ -290,6 +290,32 @@ function getCommand(text) {
     return command;
 }
 
+function sortJotsByPosition() {
+    var sourceText = $("#txtSource").val();
+    var allText = sourceText;
+    var lines = allText.split("{|");
+    var sorted = [];
+    $.each(lines, function (index, value) {
+        if (value !== '') {
+            var items = value.split('|');
+            var textVal = items[1].split('|}')[0];
+            var pos = parseFloat(items[0]);
+            var obj = {};
+            obj.pos = pos;
+            obj.text = textVal;
+            sorted.push(obj);
+        }
+    });
+    sorted = _.sortBy(sorted, function (o) { return o.pos; });
+    var sortedText = '';
+    $.each(sorted, function (index, value) {
+        var currObj = value;
+        sortedText += '{|' + currObj.pos + '|' + currObj.text + '|}';
+    });
+    window.textSource = sortedText;
+    $("#txtSource").val(window.textSource);
+}
+
 function addToSource(text, position) {
     var sourceText = $("#txtSource").val();
     var allText = sourceText;
@@ -413,6 +439,7 @@ function keyPressEvent(e) {
 }
 
 function updateOutput() {
+    sortJotsByPosition();
     var output = convertSourceToOutput($("#txtSource").val(), false,0);
     var outputWithPlayer = convertSourceToOutput($("#txtSource").val(), true, 300);
     $("#pnlNotes").html('');
