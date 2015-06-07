@@ -307,7 +307,7 @@ function addToSource(text, position) {
             }
             var obj = {};
             obj.pos = pos;
-            obj.text = text;
+            obj.text = textVal;
             sorted.push(obj);
         }
     });
