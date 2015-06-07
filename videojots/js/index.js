@@ -319,7 +319,7 @@ function addToSource(text, position) {
     var sortedText = '';
     $.each(sorted, function(index, value) {
         var currObj = value;
-        sortedText += '{|' + currObj.key + '|' + currObj.text + '|}';
+        sortedText += '{|' + currObj.pos + '|' + currObj.text + '|}';
     });
     window.textSource = sortedText;
     $("#txtSource").val(window.textSource);
