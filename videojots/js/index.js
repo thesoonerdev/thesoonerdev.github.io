@@ -291,7 +291,37 @@ function getCommand(text) {
 }
 
 function addToSource(text, position) {
-    window.textSource += '{|'+position+'|' + text + '|}';
+    var sourceText = $("#txtSource").val();
+    var allText = sourceText;
+    var lines = allText.split("{|");
+    var sorted = [];
+    $.each(lines, function (index, value) {
+        if (value !== '') {
+            var items = value.split('|');
+            var textVal = items[1].split('|}')[0];
+            var pos = parseFloat(items[0]);
+            if (position === pos) {
+                //avoid multiple lines having the same exact position,
+                //which can mess up parsing
+                position += 1;
+            }
+            var obj = {};
+            obj.pos = pos;
+            obj.text = text;
+            sorted.push(obj);
+        }
+    });
+    var lastObj = {};
+    lastObj.pos = position;
+    lastObj.text = text;
+    sorted.push(lastObj);
+    _.sortBy(sorted, function (o) { return o.pos; });
+    var sortedText = '';
+    $.each(sorted, function(index, value) {
+        var currObj = value;
+        sortedText += '{|' + currObj.key + '|' + currObj.text + '|}';
+    });
+    window.textSource = sortedText;
     $("#txtSource").val(window.textSource);
 }
 
