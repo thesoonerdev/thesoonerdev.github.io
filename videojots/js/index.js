@@ -315,7 +315,7 @@ function addToSource(text, position) {
     lastObj.pos = position;
     lastObj.text = text;
     sorted.push(lastObj);
-    _.sortBy(sorted, function (o) { return o.pos; });
+    sorted = _.sortBy(sorted, function (o) { return o.pos; });
     var sortedText = '';
     $.each(sorted, function(index, value) {
         var currObj = value;
