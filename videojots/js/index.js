@@ -45,6 +45,13 @@ $(function () {
     $("#slider").slider();
     window.currVideoID = 'unknown';
     $("#saveLink").attr("href", "data:text/plain;charset=utf-8," + $("#txtSource").val()).attr("download", window.currVideoID + ".txt");
+    window.outputFormat = 'bounded';
+    $('#selector button').click(function () {
+        $(this).addClass('active').siblings().removeClass('active');
+        var selectedName = $(this).attr('name');
+        window.outputFormat = selectedName;
+        updateOutput();
+    });
 });
 
 function updateSentence(pos, newValue, newPos) {
@@ -195,8 +202,10 @@ function convertSourceToOutput(sourceText, includeVideo, divHeight) {
         }
     });
     var styleAttr = '';
-    if (divHeight > 0) {
-        styleAttr = 'style="height:' + divHeight + 'px;overflow-y:auto"';
+    if (window.outputFormat === 'bounded') {
+        if (divHeight > 0) {
+            styleAttr = 'style="height:' + divHeight + 'px;overflow-y:auto"';
+        }
     }
     htmlFromSource = '<div '+styleAttr+' class="resizable"><br/>' + htmlFromSource + footer+'</div>';
     html = htmlPre + playerHTML+ startScopedStyle + style + endScopedStyle + htmlFromSource + htmlPost;
