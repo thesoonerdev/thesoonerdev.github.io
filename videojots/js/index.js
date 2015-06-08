@@ -449,6 +449,7 @@ function keyPressEvent(e) {
 
 function updateOutput() {
     sortJotsByPosition();
+    displayOutlineProgress();
     var output = convertSourceToOutput($("#txtSource").val(), false,0);
     var outputWithPlayer = convertSourceToOutput($("#txtSource").val(), true, 300);
     $("#pnlNotes").html('');
@@ -459,6 +460,36 @@ function updateOutput() {
     $("#txtOutputHTML").text(outputWithPlayer);
     $("#pnlNotes").scrollTop($("#pnlNotes")[0].scrollHeight);
     renderSource();
+}
+
+function displayOutlineProgress() {
+    var sourceText = $("#txtSource").val();
+    var allText = sourceText;
+    var lines = allText.split("{|");
+    $("#outlineProgress").html('');
+    var table = $('<table/>', {});
+    table.addClass('table');
+    table.css('table-layout', 'fixed');
+    table.css('border', '1px solid black');
+    var tr = $('<tr/>', {});
+    for (var i = 0; i < 100; i++) {
+        var cell = $('<td/>', {
+            id:'cell_'+i
+        });
+        cell.css('width', '1%');
+        tr.append(cell);
+    }
+    table.append(tr);
+    $("#outlineProgress").append(table);
+    $.each(lines, function(index, value) {
+        if (value !== '') {
+            var items = value.split('|');
+            var pos = parseFloat(items[0]);
+            var videoLength = player.getDuration();
+            var percent = Math.floor((pos / videoLength * (100 / 1000)));
+            $('#cell_' + percent).css('background-color', 'green');
+        }
+    });
 }
 
 function saveFile() {

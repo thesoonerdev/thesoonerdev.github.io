@@ -67,16 +67,26 @@
 
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#source" aria-controls="source" role="tab" data-toggle="tab">Source</a></li>
+                                <li role="presentation" class="active"><a href="#sourcetab" aria-controls="sourcetab" role="tab" data-toggle="tab">Source</a></li>
                                 <li role="presentation"><a href="#raw" aria-controls="raw" role="tab" data-toggle="tab">Raw</a></li>
                                 <li role="presentation"><a href="#slashcode" aria-controls="slashcode" role="tab" data-toggle="tab">SlashCode</a></li>
                             </ul>
 
                             <!-- Tab panes -->
                             <div class="tab-content">
-                                <div role="tabpanel" style="height: 250px; overflow-y: auto;" class="tab-pane active" id="source">
+                                <div role="tabpanel" class="tab-pane active" id="sourcetab">
+                                    <div style="width: 98%;">
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-lg-4">Outline progress:</div>
+                                            <div class="col-lg-8" id="outlineProgress"></div>
+                                        </div>
+                                    </div>
+                                    <div style="height: 250px; overflow-y: auto;" class="tab-pane active" id="source">
 
+                                    </div>
                                 </div>
+                                
                                 <div role="tabpanel" class="tab-pane" id="raw">
                                     <textarea id="txtSource" style="width: 90%; height: 90%"></textarea>
                                     <button onclick="saveFile()" id="saveLink" class="btn btn-primary">Save to local file</button>
