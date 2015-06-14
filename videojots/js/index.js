@@ -252,11 +252,10 @@ function keyUpEvent(e) {
             var rewind = TryParseInt(inside, null);
             if (rewind) {
                 player.seekTo(player.getCurrentTime() + rewind);
-                //remove that from display
+                //remove markers from display
                 tb.value = text.substring(0, slashBefore);
             }
         }
-        
     }
     if (text.length === 1 && isClear) {
         window.currPosition = Math.ceil(player.getCurrentTime()*1000);
