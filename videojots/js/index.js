@@ -244,6 +244,20 @@ function keyUpEvent(e) {
         player.playVideo();
         tb.value = text.slice(0, -4);
     }
+    if (text.endsWith('//')) {
+        var textBefore = text.substring(0, text.length - 2);
+        var slashBefore = textBefore.lastIndexOf('/');
+        if (slashBefore > -1) {
+            var inside = textBefore.substring(slashBefore + 1);
+            var rewind = TryParseInt(inside, null);
+            if (rewind) {
+                player.seekTo(player.getCurrentTime() + rewind);
+                //remove that from display
+                tb.value = text.substring(0, slashBefore);
+            }
+        }
+        
+    }
     if (text.length === 1 && isClear) {
         window.currPosition = Math.ceil(player.getCurrentTime()*1000);
         $("#spnNextJot").text('Next jot at position ' + window.currPosition + ' s');
