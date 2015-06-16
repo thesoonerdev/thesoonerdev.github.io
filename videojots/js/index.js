@@ -138,7 +138,7 @@ function convertSourceToOutput(sourceText, includeVideo, divHeight) {
     var playerHTML = '';
     if (includeVideo) {
         var videoID = getVideoIDFromURL(player.getVideoUrl());
-        var scriptHTML = '<div id="'+videoID+'"></div><script>var tag=document.createElement("script");tag.src="https://www.youtube.com/iframe_api";var firstScriptTag=document.getElementsByTagName("script")[0];firstScriptTag.parentNode.insertBefore(tag,firstScriptTag);var player;function onYouTubeIframeAPIReady(){player=new YT.Player("'+videoID+'",{height:"390",width:"640",videoId:"' + videoID + '",playerVars:{autostart:0,autoplay:0,controls:1},events:{onReady:onPlayerReady,onStateChange:onPlayerStateChange}})}function onPlayerReady(a){}var done=!1;function onPlayerStateChange(a){}function playVideo(){player.playVideo()}function pauseVideo(){player.pauseVideo()}function stopVideo(){player.stopVideo()}function loadVideoById(a){player.loadVideoById(a,0,"large")}function playVideoAt(pos){player.seekTo(parseFloat(pos))};</script>';
+        var scriptHTML = '<div id="' + videoID + '"></div><script>var tag=document.createElement("script");tag.src="https://www.youtube.com/iframe_api";var firstScriptTag=document.getElementsByTagName("script")[0];firstScriptTag.parentNode.insertBefore(tag,firstScriptTag);var player;function onYouTubeIframeAPIReady(){player=new YT.Player("' + videoID + '",{height:"390",width:"640",videoId:"' + videoID + '",playerVars:{autostart:0,autoplay:0,controls:1},events:{onReady:onPlayerReady,onStateChange:onPlayerStateChange}})}function onPlayerReady(a){var elems = document.getElementsByClassName("clickable");for (var i = 0; i < elems.length; i++) {elems[i].addEventListener("click",(function(i) {return function() {playVideoAt(this.id);}})(i),false);}}var done=!1;function onPlayerStateChange(a){}function playVideo(){player.playVideo()}function pauseVideo(){player.pauseVideo()}function stopVideo(){player.stopVideo()}function loadVideoById(a){player.loadVideoById(a,0,"large")}function playVideoAt(pos){player.seekTo(parseFloat(pos))};</script>';
         var htmlInfo = '<br/><b>Click on text below to jump to specific point in the video</b>';
         playerHTML = scriptHTML+htmlInfo;
     }
@@ -192,7 +192,8 @@ function convertSourceToOutput(sourceText, includeVideo, divHeight) {
                 htmlRaw = lineText;
             }
             htmlRaw = replaceAll(htmlRaw, '/n/', '<br/>');
-            var prefix = '<span class="clickable" onclick="playVideoAt(' + (location/1000) + ')">';
+            //var prefix = '<span class="clickable" onclick="playVideoAt(' + (location / 1000) + ')">';
+            var prefix = '<span class="clickable" id="' + (location / 1000) + '">';
             var suffix = '</span>';
             if (htmlRaw.startsWith('<span class=')) {
                 prefix = '';
