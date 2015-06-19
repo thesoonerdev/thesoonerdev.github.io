@@ -1,0 +1,197 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>VideoJots</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.css"/>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/FileSaver.js"></script>
+    <script src="js/underscore.js"></script>
+    <style>
+        #segrip {
+    width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    bottom: -5px;
+    right:-5px;
+}
+    </style>
+</head>
+<body>
+<div role="tabpanel" style="width: 97%;">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#editor" aria-controls="editor" role="tab" data-toggle="tab">Editor</a></li>
+        <li role="presentation"><a href="#viewoutput" aria-controls="viewoutput" role="tab" data-toggle="tab">View Output</a></li>
+        <li role="presentation"><a href="#copyoutput" aria-controls="copyoutput" role="tab" data-toggle="tab">Copy Output</a></li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="editor">
+            <div class="row">
+                <br/>
+                <div class="col-md-8">
+                    <input type="text" placeholder="Enter YouTube video URL here and hit Enter or click the Play button" class="form-control" id="tbURL" onkeypress=" return loadVideo(event) ">
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-primary" onclick=" loadVideoURL() ">Play</button>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-8">
+                    <br/>
+                    <div id="playerBox" style="width: 800px; height: 600px;">
+                        <div class="ui-resizable-handle ui-resizable-se" id="segrip"></div>
+                        <div id="player"></div>
+                    </div>
+                    <div id="sliderSpace" style="display: none;"><br /></div>
+                    <div id="slider" style="display: none;"></div>
+                    <div id="sliderMessage" style="display: none;">Move slider to adjust position of video</div>
+                    <div style="width: 97%;" class="form-group">
+                        <div id="tagArray">&nbsp;</div>
+                        <label for="comment">Notes:</label>
+                        <input type="text" class="form-control" id="tbNotes" onkeypress=" return keyPressEvent(event) " onkeyup=" return keyUpEvent(event) ">
+                        <span id="spnAlert" class="label label-danger"></span><br/>
+                        <span id="spnNextJot" class="label label-warning"></span><br/>
+                        <span id="spnCurrentJot"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div style="height: 350px; width: 95%" class="panel panel-default">
+                        <div class="panel-heading">Source</div>
+                        <div role="tabpanel">
+
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#sourcetab" aria-controls="sourcetab" role="tab" data-toggle="tab">Source</a></li>
+                                <li role="presentation"><a href="#raw" aria-controls="raw" role="tab" data-toggle="tab">Raw</a></li>
+                                <li role="presentation"><a href="#slashcode" aria-controls="slashcode" role="tab" data-toggle="tab">SlashCode</a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="sourcetab">
+                                    <div style="width: 98%;">
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-lg-4">Outline progress:</div>
+                                            <div class="col-lg-8" id="outlineProgress"></div>
+                                        </div>
+                                    </div>
+                                    <div style="height: 210px; overflow-y: auto;" class="tab-pane active" id="source">
+
+                                    </div>
+                                </div>
+                                
+                                <div role="tabpanel" class="tab-pane" id="raw">
+                                    <textarea id="txtSource" style="width: 90%; height: 90%"></textarea>
+                                    <button onclick="saveFile()" id="saveLink" class="btn btn-primary">Save to local file</button>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="slashcode" style="height: 250px; overflow-y: auto;">
+                                    Styles:
+                                    <textarea id="txtCSS" style="width: 95%;"></textarea><br/>
+                                    
+                                    <br/>Formatting rules:<br />
+                                    /p/-pause<br />
+                                    /r/-resume<br />
+                                    /-5/-rewind 5 seconds<br />
+                                    /10/-forward 10 seconds<br />
+                                    /tag/-open new tag element<br />
+                                    //-close currently open tag<br />
+                                    /name/text/-creates a new element with value name and content text. Equivalent to &lt;name&gt;text&lt;/name&gt;<br />
+                                    /now/-creates a time placeholder which will be used for the next note<br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="width: 95%;" class="panel panel-default">
+                        <div class="panel-heading">Output</div>
+                        <div style="height: 220px;overflow-y:auto" class="panel-body" id="pnlNotes">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="viewoutput">
+            
+        </div>
+        <div role="tabpanel" class="tab-pane" id="copyoutput">
+            <div>Formatting:</div>
+            <div id="selector" class="btn-group">
+                <button type="button" class="btn" name="none">None</button>
+                <button type="button" class="btn active" name="bounded">Bounded size</button>
+                <button type="button" class="btn" name="rightoutline" disabled>Outline on right</button>
+                <button type="button" class="btn" name="leftoutline" disabled>Outline on left</button>
+            </div>
+            <br/>
+            <style scoped>
+                textarea {
+                    width: 100%;
+                    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+                    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+                    box-sizing: border-box; /* Opera/IE 8+ */
+                    height: auto;
+                }
+            </style>
+            <br/>
+            <button class="btn btn-primary" onclick=" previewHtml() ">Preview</button>
+            <br/><br/>
+            <textarea rows="40" id="txtOutputHTML"></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+
+
+<script>
+    // 2. This code loads the IFrame Player API code asynchronously.
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // 3. This function creates an <iframe> (and YouTube player)
+    //    after the API code downloads.
+    var player;
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '600',
+            width: '800',
+            videoId: 'nfoudtpBV68',
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    // 4. The API will call this function when the video player is ready.
+    function onPlayerReady(event) {
+        //event.target.playVideo();
+    }
+
+    // 5. The API calls this function when the player's state changes.
+    //    The function indicates that when playing a video (state=1),
+    //    the player should play for six seconds and then stop.
+    var done = false;
+
+    function onPlayerStateChange(event) {
+        //if (event.data == YT.PlayerState.PLAYING && !done) {
+        //    setTimeout(stopVideo, 6000);
+        //    done = true;
+        //}
+    }
+
+    function stopVideo() {
+        player.stopVideo();
+    }
+</script>
+</body>
+</html>
