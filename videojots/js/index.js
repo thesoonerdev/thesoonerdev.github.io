@@ -654,5 +654,6 @@ function TryParseInt(str, defaultValue) {
 
 function previewHtml() {
     var newWindow = window.open();
-    newWindow.document.write($("#txtOutputHTML").val());
+    var fullHtml = '<html><head><title>Preview</title></head><body>' + $("#txtOutputHTML").val() + '</body></html>';
+    newWindow.document.write(fullHtml);
 }
