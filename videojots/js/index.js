@@ -193,10 +193,9 @@ function convertSourceToOutput(sourceText, includeVideo, divHeight) {
                 htmlRaw = lineText;
             }
             htmlRaw = replaceAll(htmlRaw, '/n/', '<br/>');
-            //var prefix = '<span class="clickable" onclick="playVideoAt(' + (location / 1000) + ')">';
             var prefix = '<span class="clickable" id="' + (location / 1000) + '">';
             var suffix = '</span>';
-            if (htmlRaw.startsWith('<span class=')) {
+            if (htmlRaw.startsWith('<span class=') && !htmlRaw.endsWith('</span>')) {
                 prefix = '';
                 suffix = '';
             }
