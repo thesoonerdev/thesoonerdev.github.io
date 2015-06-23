@@ -19,8 +19,12 @@ var COMMAND= {
 }
 
 $(function () {
+    //initialize globals
     window.tagArray = [];
     window.textSource = '';
+    window.currVideoID = 'unknown';
+    window.outputFormat = 'bounded';
+    //create event handlers
     $('#txtSource').bind('input propertychange', function () {
         window.textSource = $("#txtSource").val();
         updateOutput();
@@ -43,9 +47,7 @@ $(function () {
         $("#player").width($("#playerBox").width());
     });
     $("#slider").slider();
-    window.currVideoID = 'unknown';
     $("#saveLink").attr("href", "data:text/plain;charset=utf-8," + $("#txtSource").val()).attr("download", window.currVideoID + ".txt");
-    window.outputFormat = 'bounded';
     $('#selector button').click(function () {
         $(this).addClass('active').siblings().removeClass('active');
         var selectedName = $(this).attr('name');
@@ -55,9 +57,7 @@ $(function () {
 });
 
 function updateSentence(pos, newValue, newPos) {
-    var sourceText = window.textSource;//$("#txtSource").val();
-    //var re = new RegExp("\/" + classActualName + "\/([^\/]*)\/", "g");
-    //lineText = lineText.replace(re, '<span class="' + classActualName + '">$1</span>');
+    var sourceText = window.textSource;
     var textToSearch = '{|' + pos + '|';
     var indexOfItem = sourceText.indexOf(textToSearch);
     var indexOfMiddlePipe = sourceText.indexOf('|', indexOfItem+2);
