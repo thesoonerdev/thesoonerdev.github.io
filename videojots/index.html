@@ -36,7 +36,11 @@
                     <input type="text" placeholder="Enter YouTube video URL here and hit Enter or click the Play button" class="form-control" id="tbURL" onkeypress=" return loadVideo(event) ">
                 </div>
                 <div class="col-md-4">
-                    <button type="button" class="btn btn-primary" onclick=" loadVideoURL() ">Play</button>
+                    <div class="row">
+                        <div class="col-lg-2"> <button type="button" class="btn btn-primary" onclick=" loadVideoURL() ">Play</button></div>
+                        <div class="col-lg-4">Outline progress:</div>
+                        <div class="col-lg-6" id="outlineProgress"></div>
+                    </div>
                 </div>
             </div>
 
@@ -75,12 +79,14 @@
                             <!-- Tab panes -->
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="sourcetab">
-                                    <div style="width: 98%;">
-                                        <br/>
-                                        <div class="row">
-                                            <div class="col-lg-4">Outline progress:</div>
-                                            <div class="col-lg-8" id="outlineProgress"></div>
-                                        </div>
+                                    <div style="width: 98%; height: 40px;" class="form-inline">
+                                        Apply style to selected text:
+                                        <select class="form-control">
+                                            <option value="b">b</option>
+                                            <option value="i">i</option>
+                                            <option value="s">s</option>
+                                            <option value="u">u</option>
+                                        </select>
                                     </div>
                                     <div style="height: 210px; overflow-y: auto;" class="tab-pane active" id="source">
 
