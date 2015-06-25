@@ -89,20 +89,8 @@ function deleteSentence(pos) {
     }
 }
 
-//Source: http://stackoverflow.com/questions/1219860/html-encoding-in-javascript-jquery
-
-function htmlEncode(value) {
-    //create a in-memory div, set it's inner text(which jQuery automatically encodes)
-    //then grab the encoded contents back out.  The div never exists on the page.
-    return $('<div/>').text(value).html();
-}
-
 function getVideoIDFromURL(url) {
     return url.split('v=')[1].split('&')[0];
-}
-
-function htmlDecode(value) {
-    return $('<div/>').html(value).text();
 }
 
 function loadVideo(e) {
@@ -117,14 +105,6 @@ function loadVideoURL() {
     var videoid = tb.value.split('v=')[1].split('&')[0];
     player.loadVideoById(videoid);
     clearPage();
-}
-
-function escapeRegExp(string) {
-    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-}
-
-function replaceAll(string, find, replace) {
-    return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 }
 
 function clearPage() {
@@ -218,20 +198,6 @@ function getRulesFromText(cssRulesText) {
     styleElement.textContent = cssRulesText;
     doc.body.appendChild(styleElement);
     return styleElement.sheet.cssRules;
-}
-
-if (typeof String.prototype.startsWith != 'function') {
-    String.prototype.startsWith = function (str) {
-        return this.slice(0, str.length) == str;
-    };
-}
-
-String.prototype.endsWith = function (suffix) {
-    return this.indexOf(suffix, this.length - suffix.length) !== -1;
-};
-
-String.prototype.replaceAt = function (index, character) {
-    return this.substr(0, index) + character + this.substr(index + character.length);
 }
 
 function keyUpEvent(e) {
@@ -625,19 +591,20 @@ function renderSourceData() {
     $("#source").html(table.html());
 }
 
-// Array Remove - By John Resig (MIT Licensed)
-Array.prototype.remove = function (from, to) {
-    var rest = this.slice((to || from) + 1 || this.length);
-    this.length = from < 0 ? this.length + from : from;
-    return this.push.apply(this, rest);
-};
-
 function displayTagArray() {
     $("#tagArray").html('&nbsp;');
     $.each(window.tagArray, function(index, value) {
         $("#tagArray").append(value+' > ');
     });
 }
+
+function previewHtml() {
+    var newWindow = window.open();
+    var fullHtml = '<html><head><title>Preview</title></head><body>' + $("#txtOutputHTML").val() + '</body></html>';
+    newWindow.document.write(fullHtml);
+}
+
+/* Helpers */
 
 function TryParseInt(str, defaultValue) {
     var retValue = defaultValue;
@@ -651,8 +618,43 @@ function TryParseInt(str, defaultValue) {
     return retValue;
 }
 
-function previewHtml() {
-    var newWindow = window.open();
-    var fullHtml = '<html><head><title>Preview</title></head><body>' + $("#txtOutputHTML").val() + '</body></html>';
-    newWindow.document.write(fullHtml);
+// Array Remove - By John Resig (MIT Licensed)
+Array.prototype.remove = function (from, to) {
+    var rest = this.slice((to || from) + 1 || this.length);
+    this.length = from < 0 ? this.length + from : from;
+    return this.push.apply(this, rest);
+};
+
+if (typeof String.prototype.startsWith != 'function') {
+    String.prototype.startsWith = function (str) {
+        return this.slice(0, str.length) == str;
+    };
+}
+
+String.prototype.endsWith = function (suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
+
+String.prototype.replaceAt = function (index, character) {
+    return this.substr(0, index) + character + this.substr(index + character.length);
+}
+
+//Source: http://stackoverflow.com/questions/1219860/html-encoding-in-javascript-jquery
+
+function htmlEncode(value) {
+    //create a in-memory div, set it's inner text(which jQuery automatically encodes)
+    //then grab the encoded contents back out.  The div never exists on the page.
+    return $('<div/>').text(value).html();
+}
+
+function htmlDecode(value) {
+    return $('<div/>').html(value).text();
+}
+
+function escapeRegExp(string) {
+    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+
+function replaceAll(string, find, replace) {
+    return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 }
