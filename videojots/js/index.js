@@ -24,6 +24,9 @@ $(function () {
     window.textSource = '';
     window.currVideoID = 'unknown';
     window.outputFormat = 'bounded';
+    window.textAreaBeingEdited = null;
+    //initialize controls
+    $("#btnInsertLineBreak").prop('disabled', true);
     //create event handlers
     $('#txtSource').bind('input propertychange', function () {
         window.textSource = $("#txtSource").val();
@@ -55,6 +58,16 @@ $(function () {
         updateOutput();
     });
 });
+
+function insertLineBreak() {
+    var taId = window.textAreaBeingEdited;
+    var caretPos = document.getElementById(taId).selectionStart;
+    var taElem = $('#' + taId);
+    var textAreaTxt = taElem.val();
+    var textToInsert = '/n/';
+    var newVal = textAreaTxt.substring(0, caretPos) + textToInsert + textAreaTxt.substring(caretPos);
+    $(taElem).val(newVal);
+}
 
 function updateSentence(pos, newValue, newPos) {
     var sourceText = window.textSource;
@@ -486,8 +499,10 @@ function renderSource() {
             var id = this.id;
             var pos = id.split('_')[1];
             if (this.textContent === 'Edit') {
+                $('#btnInsertLineBreak').prop('disabled', false);
                 var taId = '#txt_' + pos.toString();
                 $(taId).prop('readonly', false);
+                window.textAreaBeingEdited = 'txt_'+pos.toString();
                 this.textContent = 'Save';
                 var curPos = parseFloat(pos) / 1000;
                 player.seekTo(curPos);
@@ -507,6 +522,7 @@ function renderSource() {
                 $("#sliderSpace").show();
             }
             else if (this.textContent === 'Save') {
+                $('#btnInsertLineBreak').prop('disabled', true);
                 var taId = '#txt_' + pos.toString();
                 var newValue = $(taId).val();
                 var newPos = $('#txtEditPos_' + pos).val() * 1000;
