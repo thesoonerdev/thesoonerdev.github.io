@@ -28,6 +28,18 @@ $(function () {
     //initialize controls
     $("#btnInsertLineBreak").prop('disabled', true);
     //create event handlers
+    $('#selectClasses').change(function () {
+        var predefined = ['b', 'i', 's', 'u'];
+        var getSelection = get_selection(window.textAreaBeingEdited).text;
+        var selectedVal = $(this).find(':selected').val().toString();
+        var replaceStr = '';
+        if ($.inArray(selectedVal,predefined)>-1) {
+            replaceStr = '<' + selectedVal + '>' + getSelection + '</' + selectedVal + '>';
+        } else {
+            replaceStr = '<span class="' + selectedVal + '">' + getSelection + '</span>';
+        }
+        replace_selection(window.textAreaBeingEdited, replaceStr);
+    });
     $('#txtSource').bind('input propertychange', function () {
         window.textSource = $("#txtSource").val();
         updateOutput();
@@ -452,7 +464,30 @@ function updateOutput() {
     $("#txtOutputHTML").text('');
     $("#txtOutputHTML").text(outputWithPlayer);
     $("#pnlNotes").scrollTop($("#pnlNotes")[0].scrollHeight);
+    var allrules = getAllRules();
+    $("#selectClasses").html('');
+    $.each(allrules, function(index, value) {
+        $("#selectClasses").append($('<option/>', {
+            value: value,
+            text:value
+        }));
+    });
     renderSource();
+}
+
+function getAllRules() {
+    var allRules = [];
+    allRules.push('b');
+    allRules.push('i');
+    allRules.push('s');
+    allRules.push('u');
+    var allCssRules = getRulesFromText($("#txtCSS").val());
+    for (var x = 0; x < allCssRules.length; x++) {
+        var className = allCssRules[x].selectorText;
+        var classActualName = className.substring(1);
+        allRules.push(classActualName);
+    }
+    return allRules;
 }
 
 function displayOutlineProgress() {
@@ -618,6 +653,78 @@ function previewHtml() {
     var newWindow = window.open();
     var fullHtml = '<html><head><title>Preview</title></head><body>' + $("#txtOutputHTML").val() + '</body></html>';
     newWindow.document.write(fullHtml);
+}
+
+function get_selection(theId) {
+    var e = document.getElementById(theId);
+
+    //Mozilla and DOM 3.0
+    if ('selectionStart' in e) {
+        var l = e.selectionEnd - e.selectionStart;
+        return { start: e.selectionStart, end: e.selectionEnd, length: l, text: e.value.substr(e.selectionStart, l) };
+    }
+        //IE
+    else if (document.selection) {
+        e.focus();
+        var r = document.selection.createRange();
+        var tr = e.createTextRange();
+        var tr2 = tr.duplicate();
+        tr2.moveToBookmark(r.getBookmark());
+        tr.setEndPoint('EndToStart', tr2);
+        if (r === null || tr === null) return { start: e.value.length, end: e.value.length, length: 0, text: '' };
+        var textPart = r.text.replace(/[\r\n]/g, '.'); //for some reason IE doesn't always count the \n and \r in the length
+        var textWhole = e.value.replace(/[\r\n]/g, '.');
+        var theStart = textWhole.indexOf(textPart, tr.text.length);
+        return { start: theStart, end: theStart + textPart.length, length: textPart.length, text: r.text };
+    }
+        //Browser not supported
+    else return { start: e.value.length, end: e.value.length, length: 0, text: '' };
+}
+
+function replace_selection(theId, replaceStr) {
+    var e = document.getElementById(theId);
+    var selection = get_selection(theId);
+    var startPos = selection.start;
+    var endPos = startPos + replaceStr.length;
+    e.value = e.value.substr(0, startPos) + replaceStr + e.value.substr(selection.end, e.value.length);
+    set_selection(theId, startPos, endPos);
+    return { start: startPos, end: endPos, length: replaceStr.length, text: replaceStr };
+}
+
+function set_selection(theId, startPos, endPos) {
+    var e = document.getElementById(theId);
+
+    //Mozilla and DOM 3.0
+    if ('selectionStart' in e) {
+        e.focus();
+        e.selectionStart = startPos;
+        e.selectionEnd = endPos;
+    }
+        //IE
+    else if (document.selection) {
+        e.focus();
+        var tr = e.createTextRange();
+
+        //Fix IE from counting the newline characters as two seperate characters
+        var stopIt = startPos;
+        for (i = 0; i < stopIt; i++) if (e.value[i].search(/[\r\n]/) !== -1) startPos = startPos - .5;
+        stopIt = endPos;
+        for (i = 0; i < stopIt; i++) if (e.value[i].search(/[\r\n]/) !== -1) endPos = endPos - .5;
+
+        tr.moveEnd('textedit', -1);
+        tr.moveStart('character', startPos);
+        tr.moveEnd('character', endPos - startPos);
+        tr.select();
+    }
+    return get_selection(theId);
+}
+
+function wrap_selection(theId, leftStr, rightStr, selOffset, selLength) {
+    var theSelText = get_selection(theId).text;
+    var selection = replace_selection(theId, leftStr + theSelText + rightStr);
+    if (selOffset !== undefined && selLength !== undefined) selection = set_selection(theId, selection.start + selOffset, selection.start + selOffset + selLength);
+    else if (theSelText === '') selection = set_selection(theId, selection.start + leftStr.length, selection.start + leftStr.length);
+    return selection;
 }
 
 /* Helpers */
