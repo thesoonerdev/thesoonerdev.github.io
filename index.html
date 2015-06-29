@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -533,8 +533,13 @@
     <script src="js/contact_me.js"></script>
 
     <!-- Custom Theme JavaScript -->
-    <script src="js/freelancer.js"></script>
-
+<script src="js/freelancer.js"></script>
+<div id="footerDiv"></div>
+    <script type="text/javascript">
+    $(function () {
+        $("#footerDiv").load("footer.html");
+    });
+    </script>
 </body>
 
 </html>
