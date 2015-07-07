@@ -69,7 +69,34 @@ $(function () {
         window.outputFormat = selectedName;
         updateOutput();
     });
+    document.getElementById('file-input')
+  .addEventListener('change', readSingleFile, false);
 });
+
+function readSingleFile(e) {
+    var file = e.target.files[0];
+    if (!file) {
+        return;
+    }
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        var contents = e.target.result;
+        loadFile(contents);
+    };
+    reader.readAsText(file);
+}
+
+function loadFile(contents) {
+    var json = JSON.parse(contents);
+    var source = json.text;
+    var style = json.css;
+    var videoid = json.videoid;
+    $("#txtSource").val(source);
+    $("#txtCSS").val(style);
+    updateOutput();
+    player.loadVideoById(videoid);
+    player.pauseVideo();
+}
 
 function insertLineBreak() {
     var taId = window.textAreaBeingEdited;
@@ -526,7 +553,8 @@ function saveFile() {
     var cssToWrite = $("#txtCSS").val();
     var json = {
         "text": textToWrite,
-        "css":cssToWrite
+        "css": cssToWrite,
+        "videoid":currVideoID
     };
     var blob = new Blob([JSON.stringify(json)], { type: "text/plain;charset=utf-8" });
     saveAs(blob, currVideoID+".txt");
