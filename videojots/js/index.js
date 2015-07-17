@@ -549,12 +549,14 @@ function displayOutlineProgress() {
 
 function saveFile() {
     window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
+    var currTitle = player.getVideoData().title;
     var textToWrite = $("#txtSource").val();
     var cssToWrite = $("#txtCSS").val();
     var json = {
         "text": textToWrite,
         "css": cssToWrite,
-        "videoid":currVideoID
+        "videoid": currVideoID,
+        "title":currTitle
     };
     var blob = new Blob([JSON.stringify(json)], { type: "text/plain;charset=utf-8" });
     saveAs(blob, currVideoID+".txt");
