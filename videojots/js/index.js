@@ -87,15 +87,29 @@ function readSingleFile(e) {
 }
 
 function loadFile(contents) {
-    var json = JSON.parse(contents);
-    var source = json.text;
-    var style = json.css;
-    var videoid = json.videoid;
+    var json = null;
+    var source = '';
+    var style = '';
+    var videoid = null;
+    try {
+        json = JSON.parse(contents);
+        source = json.text;
+        style = json.css;
+        videoid = json.videoid;
+    } catch (e) {
+        //old format
+        //get videoid from filename
+        source = contents;
+        var fullPath = document.getElementById('file-input').value;
+        if (fullPath) {
+            videoid = fullPath.split(/(\\|\/)/g).pop();
+            videoid = videoid.substring(0, videoid.lastIndexOf('.'));
+        }
+    }
     $("#txtSource").val(source);
     $("#txtCSS").val(style);
     updateOutput();
     player.loadVideoById(videoid);
-    player.pauseVideo();
 }
 
 function insertLineBreak() {
