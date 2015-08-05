@@ -561,6 +561,12 @@ function displayOutlineProgress() {
     });
 }
 
+function saveHtml() {
+    var fullHtml = generateHtmlFromSource();
+    var blob = new Blob([fullHtml], { type: "text/plain;charset=utf-8" });
+    saveAs(blob, currVideoID + ".html");
+}
+
 function saveFile() {
     window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
     var currTitle = player.getVideoData().title;
@@ -701,9 +707,18 @@ function displayTagArray() {
 }
 
 function previewHtml() {
-    var newWindow = window.open();
-    var fullHtml = '<html><head><title>Preview</title></head><body>' + $("#txtOutputHTML").val() + '</body></html>';
-    newWindow.document.write(fullHtml);
+    var x = window.open();
+    var fullHtml = generateHtmlFromSource();
+    x.document.open();
+    x.document.write(fullHtml);
+    x.document.close();
+}
+
+function generateHtmlFromSource() {
+    window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
+    var currTitle = player.getVideoData().title;
+    var fullHtml = '<html><head><title>' + htmlEncode(currTitle) + '</title><script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [[\'$\',\'$\'], [\'\\\\(\',\'\\\\)\']]}});</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script></head><body>' + $("#txtOutputHTML").val() + '</body></html>';
+    return fullHtml;
 }
 
 function get_selection(theId) {
