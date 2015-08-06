@@ -185,20 +185,20 @@ function convertSourceToOutput(sourceText, includeVideo, divHeight) {
     if (includeVideo) {
         var videoID = getVideoIDFromURL(player.getVideoUrl());
         var playerID = videoID.replace(/-/g, "");
-        var scriptHTML = '<div id="' + videoID + '"></div><script>var tag=document.createElement("script");tag.src="https://www.youtube.com/iframe_api";var firstScriptTag=document.getElementsByTagName("script")[0];firstScriptTag.parentNode.insertBefore(tag,firstScriptTag);var player' + playerID + ';function onYouTubeIframeAPIReady(){player' + playerID + '=new YT.Player("' + videoID + '",{height:"390",width:"640",videoId:"' + videoID + '",playerVars:{autostart:0,autoplay:0,controls:1},events:{onReady:onPlayerReady,onStateChange:onPlayerStateChange}})}function onPlayerReady(a){var elems = document.getElementsByClassName("clickable");for (var i = 0; i < elems.length; i++) {elems[i].addEventListener("click",(function(i) {return function() {playVideoAt(this.id);}})(i),false);}}var done=!1;function onPlayerStateChange(a){}function playVideo(){player' + playerID + '.playVideo()}function pauseVideo(){player'+playerID+'.pauseVideo()}function stopVideo(){player'+playerID+'.stopVideo()}function loadVideoById(a){player'+playerID+'.loadVideoById(a,0,"large")}function playVideoAt(pos){player'+playerID+'.seekTo(parseFloat(pos))};</script>';
+        var scriptHTML = '<br/><div id="' + videoID + '"></div><script>var tag=document.createElement("script");tag.src="https://www.youtube.com/iframe_api";var firstScriptTag=document.getElementsByTagName("script")[0];firstScriptTag.parentNode.insertBefore(tag,firstScriptTag);var player' + playerID + ';function onYouTubeIframeAPIReady(){player' + playerID + '=new YT.Player("' + videoID + '",{height:"390",width:"640",videoId:"' + videoID + '",playerVars:{autostart:0,autoplay:0,controls:1},events:{onReady:onPlayerReady,onStateChange:onPlayerStateChange}})}function onPlayerReady(a){var elems = document.getElementsByClassName("clickable");for (var i = 0; i < elems.length; i++) {elems[i].addEventListener("click",(function(i) {return function() {playVideoAt(this.id);}})(i),false);}}var done=!1;function onPlayerStateChange(a){}function playVideo(){player' + playerID + '.playVideo()}function pauseVideo(){player'+playerID+'.pauseVideo()}function stopVideo(){player'+playerID+'.stopVideo()}function loadVideoById(a){player'+playerID+'.loadVideoById(a,0,"large")}function playVideoAt(pos){player'+playerID+'.seekTo(parseFloat(pos))};</script>';
         var htmlInfo = '<br/><b>Click on text below to jump to specific point in the video</b>';
         playerHTML = scriptHTML+htmlInfo;
     }
     var allText = sourceText;
     var lines = allText.split("{|");
     var html = '';
-    var htmlPre = '<span class="videojots">';
+    var htmlPre = '<div style="margin: 0 auto;width:70%" ><div style=""><span class="videojots">';
     var startScopedStyle = '<style scoped>';
     var clickableStyle = '.clickable{cursor:pointer;cursor:hand;}.clickable:hover{background:yellow;} ';
     var style = clickableStyle+ $("#txtCSS").val();
     var endScopedStyle = '</style>';
     var footer = '<br/><span style="font-size:xx-small;">Video outline created using <a target="_blank" href="http://thesoonerdev.github.io/videojots/">VideoJots</a></span><br/>';
-    var htmlPost = '</span>';
+    var htmlPost = '</span></div></div>';
     var htmlFromSource = '';
     $.each(lines, function (index, value) {
         if (value.trim() !== '') {
@@ -254,7 +254,7 @@ function convertSourceToOutput(sourceText, includeVideo, divHeight) {
             styleAttr = 'style="height:' + divHeight + 'px;overflow-y:auto"';
         }
     }
-    htmlFromSource = '<div '+styleAttr+' class="resizable"><br/>' + htmlFromSource + footer+'</div>';
+    htmlFromSource = '<div ' + styleAttr + ' class="resizable"><br/>' + htmlFromSource + footer + '</div>';
     html = htmlPre + playerHTML+ startScopedStyle + style + endScopedStyle + htmlFromSource + htmlPost;
     return html;
 }
@@ -717,7 +717,7 @@ function previewHtml() {
 function generateHtmlFromSource() {
     window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
     var currTitle = player.getVideoData().title;
-    var fullHtml = '<html><head><title>' + htmlEncode(currTitle) + '</title><script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [[\'$\',\'$\'], [\'\\\\(\',\'\\\\)\']]}});</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script></head><body>' + $("#txtOutputHTML").val() + '</body></html>';
+    var fullHtml = '<html><head><title>' + htmlEncode(currTitle) + '</title><link rel="stylesheet" href="css/bootstrap.min.css"><link rel="stylesheet" href="css/jquery-ui.css"/><script src="js/jquery-2.1.1.min.js"></script><script src="js/bootstrap.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [[\'$\',\'$\'], [\'\\\\(\',\'\\\\)\']]}});</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script></head><body>' + $("#txtOutputHTML").val() + '</body></html>';
     return fullHtml;
 }
 
