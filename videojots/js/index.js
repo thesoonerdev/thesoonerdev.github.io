@@ -182,6 +182,9 @@ function clearPage() {
     $("#pnlNotes").html('');
     $("#txtSource").text('');
     $("#tbNotes").html('');
+    $("#txtSource").val('');
+    $("#txtCSS").val('');
+    renderSourceData();
     isClear = true;
 }
 
