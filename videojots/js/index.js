@@ -106,10 +106,10 @@ function loadFile(contents) {
             videoid = videoid.substring(0, videoid.lastIndexOf('.'));
         }
     }
+    loadVideoInPlayer(videoid);
     $("#txtSource").val(source);
     $("#txtCSS").val(style);
     updateOutput();
-    player.loadVideoById(videoid);
 }
 
 function insertLineBreak() {
@@ -169,8 +169,13 @@ function loadVideo(e) {
 function loadVideoURL() {
     var tb = document.getElementById("tbURL");
     var videoid = tb.value.split('v=')[1].split('&')[0];
-    player.loadVideoById(videoid);
+    loadVideoInPlayer(videoid);
     clearPage();
+}
+
+function loadVideoInPlayer(videoid) {
+    player.loadVideoById(videoid);
+    window.currVideoID = videoid;
 }
 
 function clearPage() {
@@ -183,7 +188,7 @@ function clearPage() {
 function convertSourceToOutput(sourceText, includeVideo, divHeight) {
     var playerHTML = '';
     if (includeVideo) {
-        var videoID = getVideoIDFromURL(player.getVideoUrl());
+        var videoID = window.currVideoID;//getVideoIDFromURL(player.getVideoUrl());
         var playerID = videoID.replace(/-/g, "");
         var scriptHTML = '<br/><div id="' + videoID + '"></div><script>var tag=document.createElement("script");tag.src="https://www.youtube.com/iframe_api";var firstScriptTag=document.getElementsByTagName("script")[0];firstScriptTag.parentNode.insertBefore(tag,firstScriptTag);var player' + playerID + ';function onYouTubeIframeAPIReady(){player' + playerID + '=new YT.Player("' + videoID + '",{height:"390",width:"640",videoId:"' + videoID + '",playerVars:{autostart:0,autoplay:0,controls:1},events:{onReady:onPlayerReady,onStateChange:onPlayerStateChange}})}function onPlayerReady(a){var elems = document.getElementsByClassName("clickable");for (var i = 0; i < elems.length; i++) {elems[i].addEventListener("click",(function(i) {return function() {playVideoAt(this.id);}})(i),false);}}var done=!1;function onPlayerStateChange(a){}function playVideo(){player' + playerID + '.playVideo()}function pauseVideo(){player'+playerID+'.pauseVideo()}function stopVideo(){player'+playerID+'.stopVideo()}function loadVideoById(a){player'+playerID+'.loadVideoById(a,0,"large")}function playVideoAt(pos){player'+playerID+'.seekTo(parseFloat(pos))};</script>';
         var htmlInfo = '<br/><b>Click on text below to jump to specific point in the video</b>';
@@ -567,8 +572,14 @@ function saveHtml() {
     saveAs(blob, currVideoID + ".html");
 }
 
+function saveHtmlWithGA() {
+    var fullHtml = generateHtmlFromSourceWithGA();
+    var blob = new Blob([fullHtml], { type: "text/plain;charset=utf-8" });
+    saveAs(blob, currVideoID + ".html");
+}
+
 function saveFile() {
-    window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
+    //window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
     var currTitle = player.getVideoData().title;
     var currDuration = player.getDuration();
     var textToWrite = $("#txtSource").val();
@@ -715,9 +726,27 @@ function previewHtml() {
 }
 
 function generateHtmlFromSource() {
-    window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
+    //window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
     var currTitle = player.getVideoData().title;
-    var fullHtml = '<html><head><title>' + htmlEncode(currTitle) + '</title><link rel="stylesheet" href="css/bootstrap.min.css"><link rel="stylesheet" href="css/jquery-ui.css"/><script src="js/jquery-2.1.1.min.js"></script><script src="js/bootstrap.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [[\'$\',\'$\'], [\'\\\\(\',\'\\\\)\']]}});</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script></head><body>' + $("#txtOutputHTML").val() + '</body></html>';
+    var title = '<title>' + htmlEncode(currTitle) + '</title>';
+    var bootstrapScript = '<link rel="stylesheet" href="css/bootstrap.min.css"><link rel="stylesheet" href="css/jquery-ui.css"/><script src="js/jquery-2.1.1.min.js"></script><script src="js/bootstrap.min.js"></script>';
+    var mathjaxScript = '<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [[\'$\',\'$\'], [\'\\\\(\',\'\\\\)\']]}});</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
+    var head = '<head>' + title + bootstrapScript + mathjaxScript + '</head>';
+    var body = '<body>' + $("#txtOutputHTML").val() + '</body>';
+    var fullHtml = '<html>' + head + body + '</html>';
+    return fullHtml;
+}
+
+function generateHtmlFromSourceWithGA() {
+    //window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
+    var currTitle = player.getVideoData().title;
+    var title = '<title>' + htmlEncode(currTitle) + '</title>';
+    var bootstrapScript = '<link rel="stylesheet" href="css/bootstrap.min.css"><link rel="stylesheet" href="css/jquery-ui.css"/><script src="js/jquery-2.1.1.min.js"></script><script src="js/bootstrap.min.js"></script>';
+    var mathjaxScript = '<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [[\'$\',\'$\'], [\'\\\\(\',\'\\\\)\']]}});</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
+    var gaScript = "<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create', '" + $("#tbGA").val() + "', 'auto');ga('send', 'pageview');</script>";
+    var head = '<head>'+title+bootstrapScript+mathjaxScript+gaScript+'</head>';
+    var body = '<body>' + $("#txtOutputHTML").val() + '</body>';
+    var fullHtml = '<html>' + head + body + '</html>';
     return fullHtml;
 }
 
