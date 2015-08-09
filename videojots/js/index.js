@@ -191,7 +191,7 @@ function clearPage() {
 function convertSourceToOutput(sourceText, includeVideo, divHeight) {
     var playerHTML = '';
     if (includeVideo) {
-        var videoID = window.currVideoID;//getVideoIDFromURL(player.getVideoUrl());
+        var videoID = window.currVideoID;
         var playerID = videoID.replace(/-/g, "");
         var scriptHTML = '<br/><div id="' + videoID + '"></div><script>var tag=document.createElement("script");tag.src="https://www.youtube.com/iframe_api";var firstScriptTag=document.getElementsByTagName("script")[0];firstScriptTag.parentNode.insertBefore(tag,firstScriptTag);var player' + playerID + ';function onYouTubeIframeAPIReady(){player' + playerID + '=new YT.Player("' + videoID + '",{height:"390",width:"640",videoId:"' + videoID + '",playerVars:{autostart:0,autoplay:0,controls:1},events:{onReady:onPlayerReady,onStateChange:onPlayerStateChange}})}function onPlayerReady(a){var elems = document.getElementsByClassName("clickable");for (var i = 0; i < elems.length; i++) {elems[i].addEventListener("click",(function(i) {return function() {playVideoAt(this.id);}})(i),false);}}var done=!1;function onPlayerStateChange(a){}function playVideo(){player' + playerID + '.playVideo()}function pauseVideo(){player'+playerID+'.pauseVideo()}function stopVideo(){player'+playerID+'.stopVideo()}function loadVideoById(a){player'+playerID+'.loadVideoById(a,0,"large")}function playVideoAt(pos){player'+playerID+'.seekTo(parseFloat(pos))};</script>';
         var htmlInfo = '<br/><b>Click on text below to jump to specific point in the video</b>';
@@ -433,7 +433,6 @@ function keyPressEvent(e) {
             //pop last tag from array
             window.tagArray.remove(window.tagArray.length - 1);
             encodedText = '</span>';
-            //doNotDisplay = true;
             displayTagArray();
         } else if (command === COMMAND.PAUSE) {
             player.pauseVideo();
@@ -462,7 +461,6 @@ function keyPressEvent(e) {
                 }
             }
             encodedText = slashString + htmlEncode(text.substring(numSlashes, text.length));
-            //sourceText = '/n/'+ text.substring(1, text.length);
         }
         else {
             if (text.charAt(0) === '/' && text.charAt(text.length - 1) === '/') {
@@ -480,7 +478,6 @@ function keyPressEvent(e) {
                         var tag = inside.substring(0, inside.indexOf('/'));
                         var tagValue = inside.substring(inside.indexOf('/') + 1);
                         textToDisplay = tagValue;
-                        //sourceText = '<' + tag + '>' + tagValue + '</' + tag + '>';
                         encodedText = '<span class="' + tag + '">' + htmlEncode(tagValue) + '</span>';
                     } else {
                         window.tagArray.push(tagName);
@@ -582,7 +579,6 @@ function saveHtmlWithGA() {
 }
 
 function saveFile() {
-    //window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
     var currTitle = player.getVideoData().title;
     var currDuration = player.getDuration();
     var textToWrite = $("#txtSource").val();
@@ -729,7 +725,6 @@ function previewHtml() {
 }
 
 function generateHtmlFromSource() {
-    //window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
     var currTitle = player.getVideoData().title;
     var title = '<title>' + htmlEncode(currTitle) + '</title>';
     var bootstrapScript = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"><link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/ui-lightness/jquery-ui.css"/><script src="http://code.jquery.com/jquery-2.1.4.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>';
@@ -741,7 +736,6 @@ function generateHtmlFromSource() {
 }
 
 function generateHtmlFromSourceWithGA() {
-    //window.currVideoID = getVideoIDFromURL(player.getVideoUrl());
     var currTitle = player.getVideoData().title;
     var title = '<title>' + htmlEncode(currTitle) + '</title>';
     var bootstrapScript = '<link rel="stylesheet" href="css/bootstrap.min.css"><link rel="stylesheet" href="css/jquery-ui.css"/><script src="js/jquery-2.1.1.min.js"></script><script src="js/bootstrap.min.js"></script>';
