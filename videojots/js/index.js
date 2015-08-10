@@ -573,9 +573,13 @@ function saveHtml() {
 }
 
 function saveHtmlWithGA() {
-    var fullHtml = generateHtmlFromSourceWithGA();
-    var blob = new Blob([fullHtml], { type: "text/plain;charset=utf-8" });
-    saveAs(blob, currVideoID + ".html");
+    if ($("#tbGA").val() === '') {
+        alert('No Google Analytics code was input!');
+    } else {
+        var fullHtml = generateHtmlFromSourceWithGA();
+        var blob = new Blob([fullHtml], { type: "text/plain;charset=utf-8" });
+        saveAs(blob, currVideoID + ".html");
+    }
 }
 
 function saveFile() {
