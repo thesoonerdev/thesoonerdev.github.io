@@ -124,16 +124,16 @@ function insertLineBreak() {
 
 function updateSentence(pos, newValue, newPos) {
     var sourceText = window.textSource;
-    var textToSearch = '{|' + pos + '|';
+    var textToSearch = '{|' + pos + '|#|';
     var indexOfItem = sourceText.indexOf(textToSearch);
-    var indexOfMiddlePipe = sourceText.indexOf('|', indexOfItem+2);
+    var indexOfMiddlePipe = sourceText.indexOf('|#|', indexOfItem+4);
     var indexOfEnd = sourceText.indexOf('|}', indexOfMiddlePipe+1);
     var newString = sourceText.substr(0, indexOfMiddlePipe + 1) + newValue + sourceText.substr(indexOfEnd);
     var newPosString = newString;
     if (newPos !== pos) {
         indexOfItem = newString.indexOf(textToSearch);
-        indexOfMiddlePipe = newString.indexOf('|', indexOfItem + 2);
-        newPosString = newString.substr(0, indexOfItem+2) + newPos + newString.substr(indexOfMiddlePipe);
+        indexOfMiddlePipe = newString.indexOf('|#|', indexOfItem + 4);
+        newPosString = newString.substr(0, indexOfItem+4) + newPos + newString.substr(indexOfMiddlePipe);
     }
     window.textSource = newPosString;
     $("#txtSource").val(window.textSource);
@@ -143,9 +143,9 @@ function updateSentence(pos, newValue, newPos) {
 function deleteSentence(pos) {
     if (confirm('Confirm delete?')) {
         var sourceText = window.textSource;
-        var textToSearch = '{|' + pos + '|';
+        var textToSearch = '{|' + pos + '|#|';
         var indexOfItem = sourceText.indexOf(textToSearch);
-        var indexOfMiddlePipe = sourceText.indexOf('|', indexOfItem + 2);
+        var indexOfMiddlePipe = sourceText.indexOf('|#|', indexOfItem + 4);
         var indexOfEnd = sourceText.indexOf('|}', indexOfMiddlePipe + 1);
         var newString = sourceText.substr(0, indexOfItem - 1) + sourceText.substr(indexOfEnd + 2);
         window.textSource = newString;
@@ -210,8 +210,8 @@ function convertSourceToOutput(sourceText, includeVideo, divHeight) {
     var htmlFromSource = '';
     $.each(lines, function (index, value) {
         if (value.trim() !== '') {
-            var location = parseFloat(value.split("|")[0]);
-            var lineText = value.split("|")[1].split("|}")[0];
+            var location = parseFloat(value.split("|#|")[0]);
+            var lineText = value.split("|#|")[1].split("|}")[0];
             var htmlRaw = lineText;
             if (lineText === '/n/') {
                 htmlRaw = '<br/>';
@@ -360,7 +360,7 @@ function sortJotsByPosition() {
     var sorted = [];
     $.each(lines, function (index, value) {
         if (value !== '') {
-            var items = value.split('|');
+            var items = value.split('|#|');
             var textVal = items[1].split('|}')[0];
             var pos = parseFloat(items[0]);
             var obj = {};
@@ -373,7 +373,7 @@ function sortJotsByPosition() {
     var sortedText = '';
     $.each(sorted, function (index, value) {
         var currObj = value;
-        sortedText += '{|' + currObj.pos + '|' + currObj.text + '|}';
+        sortedText += '{|' + currObj.pos + '|#|' + currObj.text + '|}';
     });
     window.textSource = sortedText;
     $("#txtSource").val(window.textSource);
@@ -386,7 +386,7 @@ function addToSource(text, position) {
     var sorted = [];
     $.each(lines, function (index, value) {
         if (value !== '') {
-            var items = value.split('|');
+            var items = value.split('|#|');
             var textVal = items[1].split('|}')[0];
             var pos = parseFloat(items[0]);
             if (position === pos) {
@@ -408,7 +408,7 @@ function addToSource(text, position) {
     var sortedText = '';
     $.each(sorted, function(index, value) {
         var currObj = value;
-        sortedText += '{|' + currObj.pos + '|' + currObj.text + '|}';
+        sortedText += '{|' + currObj.pos + '|#|' + currObj.text + '|}';
     });
     window.textSource = sortedText;
     $("#txtSource").val(window.textSource);
@@ -416,7 +416,7 @@ function addToSource(text, position) {
 }
 
 function updateCurrentJot(text) {
-    var htmlJot = convertSourceToOutput('{|'+0+'|'+text+'|}',false,0);
+    var htmlJot = convertSourceToOutput('{|'+0+'|#|'+text+'|}',false,0);
     $("#spnCurrentJot").html(htmlJot);
 }
 
@@ -557,7 +557,7 @@ function displayOutlineProgress() {
     $("#outlineProgress").append(table);
     $.each(lines, function(index, value) {
         if (value !== '') {
-            var items = value.split('|');
+            var items = value.split('|#|');
             var pos = parseFloat(items[0]);
             var videoLength = player.getDuration();
             var percent = Math.floor((pos / videoLength * (100 / 1000)));
@@ -658,7 +658,7 @@ function renderSourceData() {
     table.append(tbody);
     $.each(lines, function (index, value) {
         if (value !== '') {
-            var items = value.split('|');
+            var items = value.split('|#|');
             var pos = parseFloat(items[0]);
             var text = items[1].split('|}')[0];
             var tr = $('<tr/>', {});
