@@ -145,8 +145,8 @@ function deleteSentence(pos) {
         var sourceText = window.textSource;
         var textToSearch = '{|' + pos + '|#|';
         var indexOfItem = sourceText.indexOf(textToSearch);
-        var indexOfMiddlePipe = sourceText.indexOf('|#|', indexOfItem + 4);
-        var indexOfEnd = sourceText.indexOf('|}', indexOfMiddlePipe + 1);
+        var indexOfMiddlePipe = sourceText.indexOf('|#|', indexOfItem + 2);
+        var indexOfEnd = sourceText.indexOf('|}', indexOfMiddlePipe + 3);
         var newString = sourceText.substr(0, indexOfItem - 1) + sourceText.substr(indexOfEnd + 2);
         window.textSource = newString;
         $("#txtSource").val(window.textSource);
