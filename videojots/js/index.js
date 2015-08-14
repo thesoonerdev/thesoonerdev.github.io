@@ -133,7 +133,7 @@ function updateSentence(pos, newValue, newPos) {
     if (newPos !== pos) {
         indexOfItem = newString.indexOf(textToSearch);
         indexOfMiddlePipe = newString.indexOf('|#|', indexOfItem + 4);
-        newPosString = newString.substr(0, indexOfItem+4) + newPos + newString.substr(indexOfMiddlePipe);
+        newPosString = newString.substr(0, indexOfItem+2) + newPos + newString.substr(indexOfMiddlePipe);
     }
     window.textSource = newPosString;
     $("#txtSource").val(window.textSource);
