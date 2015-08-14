@@ -126,9 +126,9 @@ function updateSentence(pos, newValue, newPos) {
     var sourceText = window.textSource;
     var textToSearch = '{|' + pos + '|#|';
     var indexOfItem = sourceText.indexOf(textToSearch);
-    var indexOfMiddlePipe = sourceText.indexOf('|#|', indexOfItem+4);
-    var indexOfEnd = sourceText.indexOf('|}', indexOfMiddlePipe+1);
-    var newString = sourceText.substr(0, indexOfMiddlePipe + 1) + newValue + sourceText.substr(indexOfEnd);
+    var indexOfMiddlePipe = sourceText.indexOf('|#|', indexOfItem+2);
+    var indexOfEnd = sourceText.indexOf('|}', indexOfMiddlePipe+3);
+    var newString = sourceText.substr(0, indexOfMiddlePipe + 3) + newValue + sourceText.substr(indexOfEnd);
     var newPosString = newString;
     if (newPos !== pos) {
         indexOfItem = newString.indexOf(textToSearch);
