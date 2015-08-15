@@ -616,8 +616,8 @@ function renderSource() {
                 $("#slider").show();
                 $("#slider").slider({
                     value: curPos,
-                    min: curPos - 5,
-                    max: curPos + 5,
+                    min: curPos - 10,
+                    max: curPos + 10,
                     step:0.1,
                     slide: function (event, ui) {
                         $('#txtEditPos_' + pos).val(ui.value);
