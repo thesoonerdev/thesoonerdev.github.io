@@ -86,6 +86,7 @@
                                 <li role="presentation" class="active"><a href="#sourcetab" aria-controls="sourcetab" role="tab" data-toggle="tab">Source</a></li>
                                 <li role="presentation"><a href="#raw" aria-controls="raw" role="tab" data-toggle="tab">Raw</a></li>
                                 <li role="presentation"><a href="#slashcode" aria-controls="slashcode" role="tab" data-toggle="tab">SlashCode</a></li>
+                                <li role="presentation"><a href="#styling" aria-controls="styling" role="tab" data-toggle="tab">Styling</a></li>
                             </ul>
 
                             <!-- Tab panes -->
@@ -114,11 +115,12 @@
                                     <input type="file" id="file-input"/><br/>
                                     Enter Google Analytics ID: <input id="tbGA"/><button onclick=" saveHtmlWithGA() " id="saveHtmlWithGA" class="btn btn-primary">Save as web page with GA</button>
                                 </div>
-                                <div role="tabpanel" class="tab-pane" id="slashcode" style="height: 250px; overflow-y: auto;">
+                                <div role="tabpanel" class="tab-pane" id="styling" style="height: 250px; overflow-y: auto;">
                                     Styles:
                                     <textarea id="txtCSS" style="width: 95%;"></textarea><br/>
-                                    
-                                    <br/>Formatting rules:<br />
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="slashcode" style="height: 250px; overflow-y: auto;">
+                                    <br />Formatting rules:<br />
                                     /p/-pause<br />
                                     /r/-resume<br />
                                     /-5/-rewind 5 seconds<br />
