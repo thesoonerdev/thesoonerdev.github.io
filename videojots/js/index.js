@@ -97,7 +97,7 @@ function loadFile(contents) {
         style = json.css;
         videoid = json.videoid;
     } catch (e) {
-        //old format
+        //when using old format
         //get videoid from filename
         source = contents;
         var fullPath = document.getElementById('file-input').value;
