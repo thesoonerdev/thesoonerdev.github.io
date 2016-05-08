@@ -1,0 +1,5 @@
+*.name
+.idea/encodings.xml
+.idea/modules.xml
+*.xml
+.idea/thesoonerdev.github.io.iml
